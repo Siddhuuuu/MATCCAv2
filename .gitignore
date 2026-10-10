@@ -1,0 +1,6 @@
+data/
+runs/
+*.bin
+*.pt
+__pycache__/
+.pytest_cache/
