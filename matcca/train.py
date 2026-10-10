@@ -116,7 +116,9 @@ def amp_setup(mode: str, device):
     if device.type != "cuda" or mode == "none":
         return contextlib.nullcontext(), None
     if mode == "auto":
-        mode = "bf16" if torch.cuda.is_bf16_supported() else "fp16"   # T4 -> fp16
+        # is_bf16_supported() is True on a T4 (software emulation, very slow, and torch.compile skips it),
+        # so decide by hardware: native bf16 needs compute capability >= 8.0 (Ampere or newer).
+        mode = "bf16" if torch.cuda.get_device_capability(device)[0] >= 8 else "fp16"
     dt = torch.bfloat16 if mode == "bf16" else torch.float16
     return torch.autocast("cuda", dtype=dt), dt
 

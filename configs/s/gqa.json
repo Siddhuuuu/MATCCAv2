@@ -7,6 +7,7 @@
     "d_model": 512,
     "n_layers": 8,
     "n_heads": 8,
+    "loss_chunk": 4096,
     "attn": "gqa",
     "n_kv_heads": 2
   },
@@ -23,7 +24,7 @@
   "grad_clip": 1.0,
   "eval_every": 250,
   "val_tokens": 10000000,
-  "eval_batch": 16,
+  "eval_batch": 8,
   "ckpt_every_min": 30,
   "time_limit_min": 660,
   "amp": "auto",

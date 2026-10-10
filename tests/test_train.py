@@ -53,6 +53,15 @@ def test_training_reduces_loss(tmp_path):
     assert vals["4"] < 3.0 and vals["1"] < 3.3, vals  # ln(64) = 4.16 at init
 
 
+def test_chunked_loss_trains(tmp_path):
+    """The configs train with loss_chunk>0 (needed to fit a 16 GB T4): it must still learn."""
+    make_shards(str(tmp_path))
+    cfg = base_cfg(str(tmp_path), "chunked", max_steps=150, lr=1e-2)
+    cfg.model["loss_chunk"] = 16
+    res = train(cfg)
+    assert res["final_val"]["4"] < 3.0, res["final_val"]
+
+
 def test_resume_is_exact(tmp_path):
     make_shards(str(tmp_path))
     for mode in ("random", "stratified", "sum"):

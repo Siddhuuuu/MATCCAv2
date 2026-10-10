@@ -51,12 +51,12 @@ def nested(d):
 def write(scale, name, model, extra, s):
     cfg = dict(run_name=f"{scale}_{name}", out_dir="runs",
                model=dict(vocab_size=50304, max_seq_len=1024, d_model=s["d_model"], n_layers=s["n_layers"],
-                          n_heads=s["n_heads"], **model),
+                          n_heads=s["n_heads"], loss_chunk=4096, **model),
                train_shards="data/fineweb10B/fineweb_train_*.bin",
                val_shard="data/fineweb10B/fineweb_val_000000.bin",
                seq_len=1024, micro_batch=s["micro"], global_batch_tokens=s["gbt"], total_tokens=s["tokens"],
                lr=s["lr"], warmup_frac=0.02, min_lr_ratio=0.1, weight_decay=0.1, grad_clip=1.0,
-               eval_every=250, val_tokens=10_000_000, eval_batch=16, ckpt_every_min=30,
+               eval_every=250, val_tokens=10_000_000, eval_batch=8, ckpt_every_min=30,
                time_limit_min=11 * 60, amp="auto", compile=True, seed=0, data_seed=0)
     cfg.update(extra)
     os.makedirs(os.path.join(ROOT, scale), exist_ok=True)
